@@ -1,4 +1,4 @@
-## Day 1
+## Day 1: Calorie Counting
 
 The jungle must be too overgrown and difficult to navigate in vehicles or access
 from the air; the Elves' expedition traditionally goes on foot. As your boats
