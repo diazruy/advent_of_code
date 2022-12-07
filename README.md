@@ -1,4 +1,4 @@
-## Day 2
+## Day 1: Calorie Counting (Part 2)
 
 By the time you calculate the answer to the Elves' question, they've already
 realized that the Elf carrying the most Calories of food might eventually run
