@@ -1,3 +1,3 @@
 # Advent of Code
 
-Answers to each puzzle is in its own branch
+Answer to each puzzle is in its own branch
