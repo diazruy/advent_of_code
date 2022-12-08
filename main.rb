@@ -24,12 +24,13 @@ end
 
 def perform_move(stacks, line)
   match_data = MOVE_LINE_REGEX.match line
-  match_data[:amount].to_i.times do
-    source = match_data[:from].to_i - 1
-    destination = match_data[:to].to_i - 1
-    item = stacks[source].shift
-    stacks[destination].unshift(item)
-  end
+
+  amount = match_data[:amount].to_i
+  from = match_data[:from].to_i - 1
+  to = match_data[:to].to_i - 1
+
+  items = stacks[from].slice!(0, amount)
+  stacks[to].unshift(*items)
 end
 
 InputReader.each_line do |line|
