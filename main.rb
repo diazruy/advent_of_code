@@ -1,16 +1,16 @@
 require './input_reader'
 
-WINDOW_SIZE = 4
+MARKER_SIZE = 14
 
-def start_of_packet_marker?(window)
-  window.split('').uniq.length == WINDOW_SIZE
+def marker?(window)
+  window.split('').uniq.length == MARKER_SIZE
 end
 
 InputReader.each_line do |line|
-  (line.length - WINDOW_SIZE).times do |index|
-    to = index + WINDOW_SIZE
+  (line.length - MARKER_SIZE).times do |index|
+    to = index + MARKER_SIZE
     window = line[index...to]
-    if start_of_packet_marker?(window)
+    if marker?(window)
       puts to
       exit
     end
