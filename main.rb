@@ -24,11 +24,13 @@ end
 
 def perform_move(stacks, line)
   match_data = MOVE_LINE_REGEX.match line
+
+  from = match_data[:from].to_i - 1
+  to = match_data[:to].to_i - 1
+
   match_data[:amount].to_i.times do
-    source = match_data[:from].to_i - 1
-    destination = match_data[:to].to_i - 1
-    item = stacks[source].shift
-    stacks[destination].unshift(item)
+    item = stacks[from].shift
+    stacks[to].unshift(item)
   end
 end
 
