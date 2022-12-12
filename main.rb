@@ -1,46 +1,61 @@
 require './input_reader'
 require 'set'
+require 'byebug'
 
 MAX_HEIGHT = 9
 
 visible_trees = Set.new
 
 forest = []
-total_visible = 0
+max_scenic_score = 0
 
-def tallest_trees(row)
-  max_height = -1
-  visible = []
-  row.each_with_index do |height, col_index|
-    if height > max_height
-      visible << col_index
-      max_height = height
-      break if height == MAX_HEIGHT
-    end
-  end
-  visible
-end
-
-row_index = 0
 InputReader.each_line do |line|
   row = line.split("").map(&:to_i)
   forest << row
-  tallest_trees(row).each do |col|
-    visible_trees << [row_index, col]
-  end
-  tallest_trees(row.reverse).each do |col|
-    visible_trees << [row_index, row.size - col - 1]
-  end
-  row_index += 1
 end
 
-forest.transpose.each_with_index do |row, row_index|
-  tallest_trees(row).each do |col|
-    visible_trees << [col, row_index]
+def scenic_score(forest, row, col)
+  view_count = Array.new(4, 0)
+
+  current_tree_height = forest[row][col]
+
+  (row - 1).downto(0) do |row_index|
+    height = forest[row_index][col]
+    next if height.nil?
+
+    view_count[0] += 1 if height <= current_tree_height
+    break if height >= current_tree_height
   end
-  tallest_trees(row.reverse).each do |col|
-    visible_trees << [row.size - col - 1, row_index]
+
+  (row + 1).upto(forest.size - 1) do |row_index|
+    height = forest[row_index][col]
+    next if height.nil?
+
+    view_count[1] += 1 if height <= current_tree_height
+    break if height >= current_tree_height
   end
+
+  (col - 1).downto(0) do |col_index|
+    height = forest[row][col_index]
+    next if height.nil?
+
+    view_count[2] += 1 if height <= current_tree_height
+    break if height >= current_tree_height
+  end
+
+  (col + 1).upto(forest[row].size - 1) do |col_index|
+    height = forest[row][col_index]
+    next if height.nil?
+
+    view_count[3] += 1 if height <= current_tree_height
+    break if height >= current_tree_height
+  end
+  view_count.reduce(&:*)
 end
 
-puts visible_trees.size
+forest.size.times do |row|
+  forest[row].size.times do |col|
+    max_scenic_score = [max_scenic_score, scenic_score(forest, row, col)].max
+  end
+end
+puts max_scenic_score
