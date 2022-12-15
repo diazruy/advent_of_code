@@ -6,10 +6,11 @@ Position = Struct.new(:x, :y, keyword_init: true)
 
 positions_visited = Set.new
 
-head = Position.new(x: 0, y: 0)
-tail = Position.new(x: 0, y: 0)
+knots = 10.times.collect do
+  Position.new(x: 0, y: 0)
+end
 
-positions_visited << tail.dup
+positions_visited << knots.last.dup
 
 def move_head(head, direction)
   case direction
@@ -20,7 +21,7 @@ def move_head(head, direction)
   end
 end
 
-def move_tail(head, tail)
+def move_knot(head, tail)
   delta_x = head.x - tail.x
   delta_y = head.y - tail.y
 
@@ -37,31 +38,14 @@ def move_tail(head, tail)
   end
 end
 
-def render(head, tail)
-  max_x = [head.x, tail.x, 20].max
-  min_x = [head.x, tail.x, 0].min
-  max_y = [head.y, tail.y, 20].max
-  min_y = [head.y, tail.y, 0].min
-  max_y.downto(min_y) do |y|
-    output = []
-    min_x.upto(max_x) do |x|
-      output << if head.x == x && head.y == y then 'H'
-                elsif tail.x == x && tail.y == y then 'T'
-                elsif x == 0 && y == 0 then 's'
-                else '.'
-                end
-    end
-    puts output.join
-  end
-  puts
-end
-
 InputReader.each_line do |line|
   direction, count = line.split(' ')
   count.to_i.times do
-    move_head(head, direction)
-    move_tail(head, tail)
-    positions_visited << tail.dup
+    move_head(knots.first, direction)
+    9.times do |index|
+      move_knot(knots[index], knots[index + 1])
+    end
+    positions_visited << knots.last.dup
   end
 end
 
