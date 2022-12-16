@@ -1,31 +1,37 @@
 require './input_reader'
-require 'byebug'
+
+CRT_WIDTH = 40
 
 cycle = 1
 register_x = 1
 
-strengths = []
-
-def key_cycle?(cycle)
-  ((cycle + 20) % 40).zero?
+def render(register_x, cycle)
+  if visible?(register_x, cycle)
+    print '#'
+  else
+    print ' '
+  end
+  puts if (cycle % CRT_WIDTH) == 0
 end
 
-def signal_strength(x, cycle)
-  key_cycle?(cycle) ? x * cycle : 0
+def visible?(register_x, cycle)
+  sprite(register_x).cover?((cycle - 1) % CRT_WIDTH)
+end
+
+def sprite(register_x)
+  (register_x - 1)..(register_x + 1)
 end
 
 InputReader.each_line(ARGV[0] || 'input.txt') do |line|
   command, increment = line.split(' ')
   increment = increment.to_i
 
-  strengths << signal_strength(register_x, cycle)
+  render(register_x, cycle)
   cycle += 1
 
   if command ==  'addx'
-    strengths << signal_strength(register_x, cycle)
+    render(register_x, cycle)
     cycle += 1
     register_x += increment
   end
 end
-
-puts strengths.sum
