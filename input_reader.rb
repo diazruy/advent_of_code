@@ -1,6 +1,6 @@
 class InputReader
-  def self.each_line(file_name = 'input.txt', &block)
-    File.open(file_name, 'r') do |file|
+  def self.each_line(path = File.join(File.dirname(caller.first), "input.txt"), &block)
+    File.open(path, 'r') do |file|
       file.each do |line|
         yield line.chomp
       end
